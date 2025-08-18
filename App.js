@@ -1,22 +1,37 @@
-// Bài tập:
-// Tạo một ứng dụng nhỏ gồm 2 thành phần chính:
-// Component cha: quản lý state count và thông tin userName.
-// Component con: nhận count và userName qua props, và hiển thị dữ liệu đó ra màn hình.
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProductList from './ProductList';
+import ProductDetail from './ProductDetail';
+import Login from './Login';
 
-import Childecomponent from './Childecomponent';
 
-function Dadcomponent() {
-  const [count, setCount] = useState(0);
-  const [userName, setUserName] = useState("Thai Minh");
+// Viết một trang web gồm trang hiển thị danh sách sản phẩm và trang chi tiết sản phẩm sử dụng thư viện MUI:
+// - Trang danh sách sản phẩm
+// - Trang chi tiết sản phẩm
+
+// Công nghệ sử dụng: React Router, MUI, Fake API: https://fakestoreapi.com/docs#tag/Products
+function App() {
+  const [products, setProducts] = useState([]);
+  useEffect(()=> {
+    fetch('https://fakestoreapi.com/products')
+      .then(response => response.json())
+      .then(data => setProducts(data))
+      
+  },[]) ;
+
+
   return (
-    <div className="App">
-      <button onClick={() => setCount(count + 1)}></button>
-
-    <Childecomponent count={count} userName={userName} />
-    </div>
+   
+     
+      <Routes>
+        <Route path="/" element={<ProductList products={products} />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    
+   
   );
 }
 
-export default Dadcomponent;
+export default App;
